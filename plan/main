@@ -1,0 +1,18 @@
+#include <turnkey/base>
+#include <turnkey/lamp>
+
+libdbd-mysql-perl   /* moodle dep */
+libdbi-perl         /* moodle dep */
+php5-mysql          /* moodle dep */
+php5-cli            /* moodle dep */
+php5-curl           /* moodle dep */
+php5-gd             /* moodle dep */
+smarty              /* moodle dep */
+ucf                 /* moodle dep */
+unzip               /* moodle dep */
+zip                 /* moodle dep */
+aspell              /* moodle recommend */
+php5-xmlrpc         /* moodle recommend */
+php5-intl           /* moodle recommend */
+php5-ldap           /* moodle recommend */
+

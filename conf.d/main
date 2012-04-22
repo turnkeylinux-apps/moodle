@@ -1,0 +1,74 @@
+#!/bin/bash -ex
+
+WEBROOT=/var/www/moodle
+DATAROOT=/var/www/moodledata
+
+DB_NAME=moodle
+DB_USER=moodle
+DB_PASS=$(mcookie)
+
+ADMIN_USER=admin
+ADMIN_PASS=turnkey
+
+# unpack tarball to webroot and set permissions
+tar -zxf /usr/local/src/moodle*.tgz -C $(dirname $WEBROOT)
+rm /usr/local/src/moodle*.tgz
+
+chown -R root:root $WEBROOT
+
+# convenience execution variables
+MYSQL_BATCH="mysql --user=root --password=$MYSQL_PASS --batch"
+MYSQL_ADMIN="mysqladmin --user=root --password=$MYSQL_PASS"
+
+# start mysql
+/etc/init.d/mysql start
+
+# create database
+$MYSQL_ADMIN create $DB_NAME
+
+# create database user with privileges on the database
+$MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost identified by '$DB_PASS'; flush privileges;"
+
+# setup apache configuration and complete installation
+a2dissite default
+a2ensite moodle
+a2enmod rewrite
+
+cd $WEBROOT
+php admin/cli/install.php \
+    --chmod=750 \
+    --lang=en \
+    --wwwroot="http://127.0.0.1" \
+    --dataroot=$DATAROOT \
+    --dbtype=mysqli \
+    --dbhost=localhost \
+    --dbname=$DB_NAME \
+    --dbuser=$DB_USER \
+    --dbpass=$DB_PASS \
+    --prefix="" \
+    --fullname="TurnKey Moodle" \
+    --shortname=moodle \
+    --adminuser=$ADMIN_USER \
+    --adminpass=$ADMIN_PASS \
+    --non-interactive \
+    --agree-license
+
+chown -R www-data:www-data $DATAROOT
+chown root:www-data $WEBROOT/config.php
+
+# configure moodle to use dynamic hostname and ssl (webroot)
+sed -i "s|\$CFG->wwwroot \(.*\)|\$protocol='http://';\n\$hostname='127.0.0.1';\nif (isset(\$_SERVER['HTTPS'])) { \$protocol='https://'; }\nif (isset(\$_SERVER['HTTP_HOST'])) { \$hostname=\$_SERVER['HTTP_HOST']; }\n\$CFG->wwwroot = \$protocol.\$hostname;\n|" $WEBROOT/config.php
+
+# tweaking configuration
+mysql --defaults-extra-file=/etc/mysql/debian.cnf <<EOF
+USE $DB_NAME;
+UPDATE config SET value = '1' WHERE name = 'loginhttps';
+UPDATE config SET value = '127.0.0.1' WHERE name = 'smtphosts';
+UPDATE config SET value = 'noreply@example.com' WHERE name = 'noreplyaddress';
+UPDATE config SET value = '/usr/bin/du' WHERE name = 'pathtodu';
+UPDATE config SET value = '/usr/bin/aspell' WHERE name = 'aspellpath';
+EOF
+
+# stop mysql server
+/etc/init.d/mysql stop
+

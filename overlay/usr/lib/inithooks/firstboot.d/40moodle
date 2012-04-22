@@ -1,0 +1,7 @@
+#!/bin/bash -e
+# set moodle admin password
+
+. /etc/default/inithooks
+
+[ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
+$INITHOOKS_PATH/bin/moodle.py --pass="$APP_PASS"

@@ -1,0 +1,87 @@
+turnkey-moodle-11.1 (1) turnkey; urgency=low
+
+  * Upgraded to latest upstream version (installed from upstream tarball, Ubuntu
+    package available is broken due to php5.3).
+
+  * Set Moodle admin password on firstboot (convenience, security).
+
+  * Set MySQL root password on firstboot (convenience, security).
+
+  * Force MySQL to use Unicode/UTF8.
+
+  * Added php-xcache PHP opcode cacher / optimizer (performance).
+
+  * Set postfix MTA myhostname to localhost (bugfix).
+
+  * Enabled tracking in PHPMyAdmin.
+
+  * Added convenience symlinks: /var/www/{webroot, config}.
+
+  * Added recommended packages: php5-xmlrpc, php5-intl
+
+  * Major component versions:
+
+    moodle          2.0
+    mysql-server    5.1.41-3ubuntu12.8
+    apache2         2.2.14-5ubuntu8.4
+    phpmyadmin      4:3.3.2-1
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.
+
+ -- Alon Swartz <alon@turnkeylinux.org>  Sun, 19 Dec 2010 15:01:05 +0200
+
+turnkey-moodle-2009.10 (2) hardy; urgency=low
+
+  * Installed all security updates (see manifest for package versions).
+
+  * Install security updates on firstboot (except when running live).
+
+  * Bugfix: Updated apt preferences for auto-security updates (LP#550307).
+
+  * Trick webmin into not checking for upgrades (managed by apt).
+
+  * Updated di-live mysql mechanism and secret regeneration.
+
+  * Included latest version of inithooks and updated scripts.
+
+  * Included wget as per common request.
+
+ -- Alon Swartz <alon@turnkeylinux.org>  Mon, 29 Mar 2010 09:02:11 +0200
+
+turnkey-moodle-2009.10 (1) hardy; urgency=low
+
+  * Initial public release of TurnKey Moodle.
+
+  * SSL support out of the box.
+
+  * Moodle configurations:
+
+    - Included support for authentication via ldap (convenience).
+    - Force SSL logins (security).
+    - Set default theme to formal_white (more attractive).
+    - Set default admin, guest and noreply email (@example.com).
+
+  * Includes postfix MTA (bound to localhost) to allow sending of email from
+    Moodle (e.g., password recovery). Also includes webmin-postfix module for
+    convenience.
+
+  * PHPMyAdmin related:
+
+    - Includes PHPMyAdmin (listening on port 12322 - uses SSL).
+    - Includes pmadb (linked tables) advanced features.
+    - Pinned PHPMyAdmin to update directly from Debian (security).
+
+  * Regenerates all secrets during installation / firstboot (security).
+
+  * Major component versions:
+
+    moodle          1.8.2-1ubuntu4.2
+    phpmyadmin      2.11.8.1-5+lenny1
+    mysql-server    5.0.51a-3ubuntu5.4
+    apache2         2.2.8-1ubuntu0.11
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.
+
+ -- Alon Swartz <alon@turnkeylinux.org>  Tue, 29 Sep 2009 15:39:41 +0200

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+su www-data -c "/usr/bin/php /var/www/moodle/admin/cli/cron.php > /dev/null 2>&1"
