@@ -5,8 +5,8 @@ dl() {
     cd $2; curl -L -f -O $PROXY $1; cd -
 }
 
-VERSION="stable24/moodle-latest-24.tgz"
-URL="http://downloads.sourceforge.net/project/moodle/Moodle/$VERSION"
+VERSION="stable29/moodle-2.9.tgz"
+URL="https://download.moodle.org/download.php/direct/$VERSION"
 
 dl $URL /usr/local/src
 
