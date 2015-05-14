@@ -30,7 +30,7 @@ $MYSQL_ADMIN create $DB_NAME
 $MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost identified by '$DB_PASS'; flush privileges;"
 
 # setup apache configuration and complete installation
-a2dissite default
+a2dissite 000-default
 a2ensite moodle
 a2enmod rewrite
 
@@ -62,6 +62,7 @@ sed -i "s|\$CFG->wwwroot \(.*\)|\$protocol='http://';\n\$hostname='127.0.0.1';\n
 # tweaking configuration
 mysql --defaults-extra-file=/etc/mysql/debian.cnf <<EOF
 USE $DB_NAME;
+UPDATE user SET email = 'admin@example.com' WHERE username = 'admin';
 UPDATE config SET value = '1' WHERE name = 'loginhttps';
 UPDATE config SET value = '127.0.0.1' WHERE name = 'smtphosts';
 UPDATE config SET value = 'noreply@example.com' WHERE name = 'noreplyaddress';
