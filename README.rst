@@ -21,7 +21,7 @@ and on top of that:
    - Set default theme to formal\_white (more attractive).
 
 - SSL support out of the box.
-- `PHPMyAdmin`_ administration frontend for MySQL (listening on port
+- `Adminer`_ administration frontend for MySQL (listening on port
   12322 - uses SSL).
 - Postfix MTA (bound to localhost) to allow sending of email (e.g.,
   password recovery).
@@ -42,7 +42,7 @@ Credentials *(passwords set at first boot)*
 
 .. _Moodle: http://moodle.org
 .. _TurnKey Core: http://www.turnkeylinux.org/core
-.. _PHPMyAdmin: http://www.phpmyadmin.net/
+.. _Adminer: http://www.adminer.org/
 .. _Teacher documentation: http://docs.moodle.org/en/Teacher_documentation
 .. _Administrator documentation: http://docs.moodle.org/en/Administrator_documentation
 .. _Developer documentation: http://docs.moodle.org/en/Developer_documentation
