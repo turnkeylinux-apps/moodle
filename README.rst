@@ -41,7 +41,7 @@ Credentials *(passwords set at first boot)*
 
 
 .. _Moodle: http://moodle.org
-.. _TurnKey Core: http://www.turnkeylinux.org/core
+.. _TurnKey Core: https://www.turnkeylinux.org/core
 .. _Adminer: http://www.adminer.org/
 .. _Teacher documentation: http://docs.moodle.org/en/Teacher_documentation
 .. _Administrator documentation: http://docs.moodle.org/en/Administrator_documentation
