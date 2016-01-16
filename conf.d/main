@@ -54,6 +54,7 @@ php admin/cli/install.php \
     --agree-license
 
 chown -R www-data:www-data $DATAROOT
+chown -R www-data:www-data /var/www/moodle/theme
 chown root:www-data $WEBROOT/config.php
 
 # configure moodle to use dynamic hostname and ssl (webroot)
