@@ -4,6 +4,9 @@ turnkey-moodle-14.1 (1) turnkey; urgency=low
 
   * Fixed permission issue that blocked installation of themes (#548).
 
+  * Removed php5-xcache. No one has reported issues for v14.0 Moodle but 
+    issues were reported in v13.0. xcache is now redundant anyway.
+
   * Note: Please refer to turnkey-core's changelog for changes common to all
     appliances. Here we only describe changes specific to this appliance.
 
