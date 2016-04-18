@@ -1,10 +1,5 @@
 #!/bin/bash -ex
 
-# Remove xcache as it was reported previously that this gave issues with Moodle
-# Also as of Debian Jessie PHP has a built in opcacher so xcache is redundant
-apt-get purge -y php5-xcache
-rm -f /etc/php5/cli/conf.d/20-xcache.ini
-
 WEBROOT=/var/www/moodle
 DATAROOT=/var/www/moodledata
 
