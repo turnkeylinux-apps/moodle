@@ -1,3 +1,12 @@
+turnkey-moodle-14.2 (1) turnkey; urgency=low
+
+  * Upgraded to latest version of Moodle (3.2.2).
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.
+
+ -- Anton Pyrogovskyi <anton@turnkeylinux.org>  Sun, 26 Mar 2017 15:50:40 +0200
+
 turnkey-moodle-14.1 (1) turnkey; urgency=low
 
   * Upgraded to latest version of Moodle (3.0.2).
