@@ -3,16 +3,19 @@
 
 libdbd-mysql-perl   /* moodle dep */
 libdbi-perl         /* moodle dep */
-php5-mysql          /* moodle dep */
-php5-cli            /* moodle dep */
-php5-curl           /* moodle dep */
-php5-gd             /* moodle dep */
-smarty              /* moodle dep */
+php-mysql          /* moodle dep */
+php-cli            /* moodle dep */
+php-curl           /* moodle dep */
+php-gd             /* moodle dep */
+php-mbstring
+php-soap
+php-zip
 ucf                 /* moodle dep */
 unzip               /* moodle dep */
 zip                 /* moodle dep */
 aspell              /* moodle recommend */
-php5-xmlrpc         /* moodle recommend */
-php5-intl           /* moodle recommend */
-php5-ldap           /* moodle recommend */
+php-xml
+php-xmlrpc         /* moodle recommend */
+php-intl           /* moodle recommend */
+php-ldap           /* moodle recommend */
 
