@@ -20,8 +20,26 @@ chown -R root:root $WEBROOT
 MYSQL_BATCH="mysql --user=root --password=$MYSQL_PASS --batch"
 MYSQL_ADMIN="mysqladmin --user=root --password=$MYSQL_PASS"
 
+cat >> /etc/mysql/my.cnf <<EOF
+[client]
+default-character-set = utf8mb4
+
+[mysqld]
+innodb_file_format = Barracuda
+innodb_file_per_table = 1
+innodb_large_prefix
+
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+skip-character-set-client-handshake
+
+[mysql]
+default-character-set = utf8mb4
+EOF
+
+
 # start mysql
-/etc/init.d/mysql start
+service mysql start
 
 # create database
 $MYSQL_ADMIN create $DB_NAME
@@ -34,13 +52,14 @@ a2dissite 000-default
 a2ensite moodle
 a2enmod rewrite
 
+
 cd $WEBROOT
 php admin/cli/install.php \
     --chmod=750 \
     --lang=en \
     --wwwroot="http://127.0.0.1" \
     --dataroot=$DATAROOT \
-    --dbtype=mysqli \
+    --dbtype=mariadb \
     --dbhost=localhost \
     --dbname=$DB_NAME \
     --dbuser=$DB_USER \
@@ -72,5 +91,5 @@ UPDATE config SET value = '/usr/bin/aspell' WHERE name = 'aspellpath';
 EOF
 
 # stop mysql server
-/etc/init.d/mysql stop
+service mysql stop
 
