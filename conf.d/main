@@ -2,6 +2,7 @@
 
 WEBROOT=/var/www/moodle
 DATAROOT=/var/www/moodledata
+MOOSHROOT=/var/www/moosh
 
 DB_NAME=moodle
 DB_USER=moodle
@@ -9,12 +10,6 @@ DB_PASS=$(mcookie)
 
 ADMIN_USER=admin
 ADMIN_PASS=turnkey
-
-# unpack tarball to webroot and set permissions
-tar -zxf /usr/local/src/moodle*.tgz -C $(dirname $WEBROOT)
-rm /usr/local/src/moodle*.tgz
-
-chown -R root:root $WEBROOT
 
 # convenience execution variables
 MYSQL_BATCH="mysql --user=root --password=$MYSQL_PASS --batch"
@@ -52,8 +47,22 @@ a2dissite 000-default
 a2ensite moodle
 a2enmod rewrite
 
+cd /var/www
+git clone git://github.com/tmuras/moosh.git
+cd $MOOSHROOT
+composer install
+ln -s $MOOSHROOT/moosh.php /usr/local/bin/moosh
+
+cd /var/www
+
+# download moodle with moosh, unpack tarball to webroot and set permissions
+moosh download-moodle
+tar -zxf moodle*.tgz
+rm moodle*.tgz
+chown -R root:root $WEBROOT
 
 cd $WEBROOT
+
 php admin/cli/install.php \
     --chmod=750 \
     --lang=en \
