@@ -36,6 +36,7 @@ Moodle documentation:
 Credentials *(passwords set at first boot)*
 -------------------------------------------
 
+-  Adminer: username: **adminer**
 -  Webmin, Webshell, SSH, MySQL: username **root**
 -  Moodle: username **admin**
 
