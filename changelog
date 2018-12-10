@@ -1,5 +1,7 @@
 turnkey-moodle-15.1 (1) turnkey; urgency=low
 
+  * Update Moodle to latest upstream release (3.5.3).
+
   * Rebuild to resolve inadvertant removal of mariadb during sec-updates
     - part of #1246.
 
