@@ -1,3 +1,11 @@
+turnkey-moodle-15.2 (1) turnkey; urgency=low
+
+  * Update Moodle to latest upstream release (3.7).
+
+  * Includes PHP7.0 (installed from Sury repos)
+
+ -- Stefan Davis <stefan@turnkeylinux.org>  Thu, 06 Jun 2019 05:01:45 +0000
+
 turnkey-moodle-15.1 (1) turnkey; urgency=low
 
   * Update Moodle to latest upstream release (3.5.3).
