@@ -1,21 +1,21 @@
 #include <turnkey/base>
-#include <turnkey/lamp>
+#include <turnkey/lamp72>
 
 libdbd-mysql-perl   /* moodle dep */
 libdbi-perl         /* moodle dep */
-php-mysql          /* moodle dep */
-php-cli            /* moodle dep */
-php-curl           /* moodle dep */
-php-gd             /* moodle dep */
-php-mbstring
-php-soap
-php-zip
+php7.2-mysql          /* moodle dep */
+php7.2-cli            /* moodle dep */
+php7.2-curl           /* moodle dep */
+php7.2-gd             /* moodle dep */
+php7.2-mbstring
+php7.2-soap
+php7.2-zip
 ucf                 /* moodle dep */
 unzip               /* moodle dep */
 zip                 /* moodle dep */
 aspell              /* moodle recommend */
-php-xml
-php-xmlrpc         /* moodle recommend */
-php-intl           /* moodle recommend */
-php-ldap           /* moodle recommend */
+php7.2-xml
+php7.2-xmlrpc         /* moodle recommend */
+php7.2-intl           /* moodle recommend */
+php7.2-ldap           /* moodle recommend */
 
