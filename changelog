@@ -1,3 +1,12 @@
+turnkey-moodle-15.3 (1) turnkey; urgency=low
+
+  * Update Moodle to latest upstream release (3.7.1).
+
+  * Fix Moodle cron job error - closes #1344
+    [ Zhenya Hvorostian ]
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Mon, 29 Jul 2019 14:49:06 +1000
+
 turnkey-moodle-15.2 (1) turnkey; urgency=low
 
   * Update Moodle to latest upstream release (3.7).
