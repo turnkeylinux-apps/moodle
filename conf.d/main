@@ -15,24 +15,6 @@ ADMIN_PASS=turnkey
 MYSQL_BATCH="mysql --user=root --password=$MYSQL_PASS --batch"
 MYSQL_ADMIN="mysqladmin --user=root --password=$MYSQL_PASS"
 
-cat >> /etc/mysql/my.cnf <<EOF
-[client]
-default-character-set = utf8mb4
-
-[mysqld]
-innodb_file_format = Barracuda
-innodb_file_per_table = 1
-innodb_large_prefix
-
-character-set-server = utf8mb4
-collation-server = utf8mb4_unicode_ci
-skip-character-set-client-handshake
-
-[mysql]
-default-character-set = utf8mb4
-EOF
-
-
 # start mysql
 service mysql start
 
