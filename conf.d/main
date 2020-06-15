@@ -60,6 +60,8 @@ php admin/cli/install.php \
     --shortname=moodle \
     --adminuser=$ADMIN_USER \
     --adminpass=$ADMIN_PASS \
+    --adminemail=admin@example.com \
+    --upgradekey= \
     --non-interactive \
     --agree-license
 
@@ -73,7 +75,6 @@ sed -i "s|\$CFG->wwwroot \(.*\)|\$protocol='http://';\n\$hostname='127.0.0.1';\n
 # tweaking configuration
 mysql --defaults-extra-file=/etc/mysql/debian.cnf <<EOF
 USE $DB_NAME;
-UPDATE user SET email = 'admin@example.com' WHERE username = 'admin';
 UPDATE config SET value = '1' WHERE name = 'loginhttps';
 UPDATE config SET value = '127.0.0.1' WHERE name = 'smtphosts';
 UPDATE config SET value = 'noreply@example.com' WHERE name = 'noreplyaddress';
@@ -83,4 +84,3 @@ EOF
 
 # stop mysql server
 service mysql stop
-
