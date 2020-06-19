@@ -9,10 +9,11 @@ Option:
 import re
 import sys
 import getopt
-import hashlib
+import bcrypt
 
 from dialog_wrapper import Dialog
 from mysqlconf import MySQL
+
 
 def usage(s=None):
     if s:
@@ -21,16 +22,7 @@ def usage(s=None):
     print(__doc__, file=sys.stderr)
     sys.exit(1)
 
-def _get_passwordsalt(conffile="/var/www/moodle/config.php"):
-    with open(conffile, 'r') as fob:
-        for line in fob:
-            line = line.strip()
-            m = re.match("\$CFG->passwordsaltmain = '(.*)';", line)
-            if m:
-                return m.group(1)
 
-    return ""
-            
 def main():
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ['help', 'pass='])
@@ -50,12 +42,13 @@ def main():
             "Moodle Password",
             "Enter new password for the Moodle 'admin' account.")
 
-    salt = _get_passwordsalt()
-    hashpass = hashlib.md5((password + salt).encode('utf8')).hexdigest()
+    salt = bcrypt.gensalt()
+    hashpass = bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8')
 
     m = MySQL()
-    m.execute('UPDATE moodle.user SET password=%s WHERE username=\"admin\";', (hashpass,))
+    m.execute('UPDATE moodle.user SET password=%s WHERE username=\"admin\";',
+              (hashpass,))
+
 
 if __name__ == "__main__":
     main()
-
