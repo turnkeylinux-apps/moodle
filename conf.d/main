@@ -32,7 +32,8 @@ a2enmod rewrite
 cd /var/www
 git clone git://github.com/tmuras/moosh.git
 cd $MOOSHROOT
-composer install
+chown -R www-data:www-data $MOOSHROOT
+turnkey-composer install
 ln -s $MOOSHROOT/moosh.php /usr/local/bin/moosh
 
 cd /var/www
