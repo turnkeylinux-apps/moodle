@@ -29,23 +29,20 @@ a2dissite 000-default
 a2ensite moodle
 a2enmod rewrite
 
-cd /var/www
+cd $(dirname $MOOSHROOT)
 git clone git://github.com/tmuras/moosh.git
 cd $MOOSHROOT
 chown -R www-data:www-data $MOOSHROOT
 turnkey-composer install
 ln -s $MOOSHROOT/moosh.php /usr/local/bin/moosh
 
-cd /var/www
-
-# download moodle with moosh, unpack tarball to webroot and set permissions
-moosh download-moodle
-tar -zxf moodle*.tgz
-rm moodle*.tgz
+# Unpack tarball
+SRC=/usr/local/src/moodle.tgz
+tar -C $(dirname $WEBROOT) -zxf $SRC
+rm -f $SRC
 chown -R root:root $WEBROOT
 
 cd $WEBROOT
-
 php admin/cli/install.php \
     --chmod=750 \
     --lang=en \
@@ -61,6 +58,8 @@ php admin/cli/install.php \
     --shortname=moodle \
     --adminuser=$ADMIN_USER \
     --adminpass=$ADMIN_PASS \
+    --adminemail=admin@example.com \
+    --upgradekey= \
     --non-interactive \
     --agree-license
 
@@ -74,7 +73,6 @@ sed -i "s|\$CFG->wwwroot \(.*\)|\$protocol='http://';\n\$hostname='127.0.0.1';\n
 # tweaking configuration
 mysql --defaults-extra-file=/etc/mysql/debian.cnf <<EOF
 USE $DB_NAME;
-UPDATE user SET email = 'admin@example.com' WHERE username = 'admin';
 UPDATE config SET value = '1' WHERE name = 'loginhttps';
 UPDATE config SET value = '127.0.0.1' WHERE name = 'smtphosts';
 UPDATE config SET value = 'noreply@example.com' WHERE name = 'noreplyaddress';
@@ -84,4 +82,3 @@ EOF
 
 # stop mysql server
 service mysql stop
-
