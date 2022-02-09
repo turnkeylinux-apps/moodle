@@ -28,6 +28,7 @@ $MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost
 a2dissite 000-default
 a2ensite moodle
 a2enmod rewrite
+a2enmod headers
 
 cd $(dirname $MOOSHROOT)
 git clone git://github.com/tmuras/moosh.git
