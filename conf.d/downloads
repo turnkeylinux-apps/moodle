@@ -21,8 +21,8 @@ dl() {
 # backburner and just going to use a static URL.
 
 # v3.9.0
-VER_1=39
-VER_2=3.9
+VER_1=311
+VER_2=3.11.5
 
 URL="https://download.moodle.org/download.php/direct/stable${VER_1}/moodle-${VER_2}.tgz"
 

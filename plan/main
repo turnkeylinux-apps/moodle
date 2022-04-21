@@ -5,18 +5,18 @@ python3-bcrypt      /* Moodle inithook to set admin password */
 
 libdbd-mysql-perl   /* moodle dep */
 libdbi-perl         /* moodle dep */
-php7.3-mysql        /* moodle dep */
-php7.3-cli          /* moodle dep */
-php7.3-curl         /* moodle dep */
-php7.3-gd           /* moodle dep */
-php7.3-mbstring
-php7.3-soap
-php7.3-zip
+php-mysql        /* moodle dep */
+php-cli          /* moodle dep */
+php-curl         /* moodle dep */
+php-gd           /* moodle dep */
+php-mbstring
+php-soap
+php-zip
 ucf                 /* moodle dep */
 unzip               /* moodle dep */
 zip                 /* moodle dep */
 aspell              /* moodle recommend */
-php7.3-xml
-php7.3-xmlrpc       /* moodle recommend */
-php7.3-intl         /* moodle recommend */
-php7.3-ldap         /* moodle recommend */
+php-xml
+php-xmlrpc       /* moodle recommend */
+php-intl         /* moodle recommend */
+php-ldap         /* moodle recommend */

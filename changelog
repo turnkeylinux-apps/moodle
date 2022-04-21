@@ -1,3 +1,12 @@
+turnkey-moodle-17.0 (1) turnkey; urgency=low
+
+  * Update Moodle to latest upstream release (3.11.5).
+
+  * Run Moodle cron job every minute - closes #1453.
+    [ Stefan Davis <stefan@turnkeykinux.org> ]
+
+ -- Zhenya Hvorostian <zhenya@turnkeylinux.org>  Wed, 09 Feb 2022 11:08:39 +0300
+
 turnkey-moodle-16.1 (1) turnkey; urgency=low
 
   * Update Moodle to latest upstream release (3.10.1).
