@@ -30,6 +30,9 @@ a2ensite moodle
 a2enmod rewrite
 a2enmod headers
 
+# tweak php.ini as recommended by moodle
+sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/7.4/apache2/php.ini
+
 cd $(dirname $MOOSHROOT)
 git clone https://github.com/tmuras/moosh.git
 cd $MOOSHROOT
@@ -37,10 +40,11 @@ chown -R www-data:www-data $MOOSHROOT
 turnkey-composer install
 ln -s $MOOSHROOT/moosh.php /usr/local/bin/moosh
 
-# Unpack tarball
-SRC=/usr/local/src/moodle.tgz
-tar -C $(dirname $WEBROOT) -zxf $SRC
-rm -f $SRC
+# download latest moodle with moosh, then unpack
+cd $(dirname $WEBROOT)
+moosh download-moodle
+tar -C $(dirname $WEBROOT) -zxf moodle-*.tgz
+rm -f moodle-*.tgz
 chown -R root:root $WEBROOT
 
 cd $WEBROOT
@@ -68,10 +72,15 @@ chown -R www-data:www-data $DATAROOT
 chown -R www-data:www-data /var/www/moodle/theme
 chown root:www-data $WEBROOT/config.php
 
+## tweak config
+
 # configure moodle to use dynamic hostname and ssl (webroot)
 sed -i "s|\$CFG->wwwroot \(.*\)|\$protocol='http://';\n\$hostname='127.0.0.1';\nif (isset(\$_SERVER['HTTPS'])) { \$protocol='https://'; }\nif (isset(\$_SERVER['HTTP_HOST'])) { \$hostname=\$_SERVER['HTTP_HOST']; }\n\$CFG->wwwroot = \$protocol.\$hostname;\n|" $WEBROOT/config.php
 
-# tweaking configuration
+# prevent setting of executable paths via Admin UI (locks down possible privilege escalation)
+sed -i "/'admin';$/ a \$CFG->preventexecpath = true;" $WEBROOT/config.php
+
+# set paths to utils
 mysql --defaults-extra-file=/etc/mysql/debian.cnf <<EOF
 USE $DB_NAME;
 UPDATE config SET value = '1' WHERE name = 'loginhttps';
@@ -86,5 +95,13 @@ UPDATE config SET value = '/usr/bin/pdftoppm' WHERE name = 'pathtopdftoppm';
 UPDATE config SET value = '/usr/bin/python3' WHERE name = 'pathtopython';
 EOF
 
+# disable user delete - removes hyped up "critical" warning
+# - see https://tracker.moodle.org/browse/MDL-67852 for more info
+mysql -e <<EOF
+USE $DB_NAME;
+DELETE FROM role_capabilities WHERE capability = "tool/dataprivacy:requestdelete";
+EOF
+
+exit 1
 # stop mysql server
 service mysql stop
