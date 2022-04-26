@@ -31,7 +31,7 @@ a2enmod rewrite
 a2enmod headers
 
 cd $(dirname $MOOSHROOT)
-git clone git://github.com/tmuras/moosh.git
+git clone https://github.com/tmuras/moosh.git
 cd $MOOSHROOT
 chown -R www-data:www-data $MOOSHROOT
 turnkey-composer install
@@ -79,6 +79,11 @@ UPDATE config SET value = '127.0.0.1' WHERE name = 'smtphosts';
 UPDATE config SET value = 'noreply@example.com' WHERE name = 'noreplyaddress';
 UPDATE config SET value = '/usr/bin/du' WHERE name = 'pathtodu';
 UPDATE config SET value = '/usr/bin/aspell' WHERE name = 'aspellpath';
+UPDATE config SET value = '/usr/bin/php' WHERE name = 'pathtophp';
+UPDATE config SET value = '/usr/bin/dot' WHERE name = 'pathtodot';
+UPDATE config SET value = '/usr/bin/gs' WHERE name = 'pathtogs';
+UPDATE config SET value = '/usr/bin/pdftoppm' WHERE name = 'pathtopdftoppm';
+UPDATE config SET value = '/usr/bin/python3' WHERE name = 'pathtopython';
 EOF
 
 # stop mysql server
