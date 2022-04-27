@@ -102,6 +102,5 @@ USE $DB_NAME;
 DELETE FROM role_capabilities WHERE capability = "tool/dataprivacy:requestdelete";
 EOF
 
-exit 1
 # stop mysql server
 service mysql stop
