@@ -1,6 +1,13 @@
 turnkey-moodle-17.0 (1) turnkey; urgency=low
 
+  * Update Moodle and its dependencies to v17.0.
+ 
+  * Remove outdated bcrypt package in moodle.py file.
+
+  * Change mysql execute statement in conf.d/main file to remove syntax error.
+
   * Update Moodle to latest upstream release (4.0.0).
+    [ Zhenya Hvorostian <zhenya@turnkeylinux.org> ] 
 
   * Various security tweaks.
     [ Jeremy Davis <jeremy@turnkeykinux.org> ]
@@ -8,7 +15,7 @@ turnkey-moodle-17.0 (1) turnkey; urgency=low
   * Run Moodle cron job every minute - closes #1453.
     [ Stefan Davis <stefan@turnkeykinux.org> ]
 
- -- Zhenya Hvorostian <zhenya@turnkeylinux.org> Tue, 26 Apr 2022 15:27:07 +0000
+ -- Mattie Darden <mattie@turnkeylinux.org>  Wed, 21 Sep 2022 18:53:03 -0400
 
 turnkey-moodle-16.1 (1) turnkey; urgency=low
 

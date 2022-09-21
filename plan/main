@@ -1,8 +1,6 @@
 #include <turnkey/base>
 #include <turnkey/lamp>
 
-python3-bcrypt      /* Moodle inithook to set admin password */
-
 libdbd-mysql-perl   /* moodle dep */
 libdbi-perl         /* moodle dep */
 php-mysql           /* moodle dep */

@@ -9,7 +9,9 @@ Option:
 import re
 import sys
 import getopt
-import bcrypt
+import random
+import string
+import hashlib
 
 from libinithooks.dialog_wrapper import Dialog
 from mysqlconf import MySQL
@@ -42,8 +44,9 @@ def main():
             "Moodle Password",
             "Enter new password for the Moodle 'admin' account.")
 
-    salt = bcrypt.gensalt()
-    hashpass = bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8')
+    salt_chars = string.ascii_letters + string.digits
+    salt = "".join(random.choice(salt_chars) for c in range(32))
+    hashpass = "%s:%s" % (hashlib.sha256((password + salt).encode('utf8')).hexdigest(), salt)
 
     m = MySQL()
     m.execute('UPDATE moodle.user SET password=%s WHERE username=\"admin\";',
