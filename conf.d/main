@@ -97,7 +97,7 @@ EOF
 
 # disable user delete - removes hyped up "critical" warning
 # - see https://tracker.moodle.org/browse/MDL-67852 for more info
-mysql -e <<EOF
+mysql <<EOF
 USE $DB_NAME;
 DELETE FROM role_capabilities WHERE capability = "tool/dataprivacy:requestdelete";
 EOF

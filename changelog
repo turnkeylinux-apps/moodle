@@ -1,6 +1,11 @@
 turnkey-moodle-17.0 (1) turnkey; urgency=low
 
+  * Update Moodle appliance and its dependencies to tkldev v17.0.
+
+  * Remove execute flag for sql command that was causing build error in conf.d/main file. 
+
   * Update Moodle to latest upstream release (4.0.0).
+    [ Zhenya Hvorostian <zhenya@turnkeylinux.org>]
 
   * Various security tweaks.
     [ Jeremy Davis <jeremy@turnkeykinux.org> ]
@@ -8,7 +13,7 @@ turnkey-moodle-17.0 (1) turnkey; urgency=low
   * Run Moodle cron job every minute - closes #1453.
     [ Stefan Davis <stefan@turnkeykinux.org> ]
 
- -- Zhenya Hvorostian <zhenya@turnkeylinux.org> Tue, 26 Apr 2022 15:27:07 +0000
+ -- Mattie Darden <mattie@turnkeylinux.org>  Thu, 22 Sep 2022 10:34:24 -0400
 
 turnkey-moodle-16.1 (1) turnkey; urgency=low
 
