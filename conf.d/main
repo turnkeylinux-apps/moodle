@@ -16,7 +16,7 @@ MYSQL_BATCH="mysql --user=root --password=$MYSQL_PASS --batch"
 MYSQL_ADMIN="mysqladmin --user=root --password=$MYSQL_PASS"
 
 # start mysql
-service mysql start
+systemctl start mysql
 
 # create database
 $MYSQL_ADMIN create $DB_NAME
@@ -103,4 +103,4 @@ DELETE FROM role_capabilities WHERE capability = "tool/dataprivacy:requestdelete
 EOF
 
 # stop mysql server
-service mysql stop
+systemctl stop  mysql
