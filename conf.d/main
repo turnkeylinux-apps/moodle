@@ -32,6 +32,7 @@ a2enmod headers
 
 # tweak php.ini as recommended by moodle
 sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/8.2/apache2/php.ini
+sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/8.2/cli/php.ini
 
 cd $(dirname $MOOSHROOT)
 git clone https://github.com/tmuras/moosh.git
