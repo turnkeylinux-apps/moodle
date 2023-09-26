@@ -1,6 +1,6 @@
-turnkey-moodle-18 (1) turnkey; urgency=low
+turnkey-moodle-18.0 (1) turnkey; urgency=low
 
-  * Install latest upstream version of Moodle: 4.2.1+ (as of today, automatically searches for the revision).
+  * Install latest upstream version of Moodle: 4.2.2+ (as of today, automatically searches for the revision).
 
   * Re-build on TurnKey Linux 18 (Debian 12 'bookworm')
 
