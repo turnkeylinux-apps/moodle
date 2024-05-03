@@ -38,6 +38,11 @@ cd $(dirname $MOOSHROOT)
 git clone https://github.com/tmuras/moosh.git
 cd $MOOSHROOT
 chown -R www-data:www-data $MOOSHROOT
+if [[ -n "$GITHUB_USER_TOKEN" ]]; then
+    turnkey-composer config github-oauth.github.com $GITHUB_USER_TOKEN
+else
+    echo "WARNING: GITHUB_USER_TOKEN not set, build may fail" >&2
+fi
 turnkey-composer install
 ln -s $MOOSHROOT/moosh.php /usr/local/bin/moosh
 
