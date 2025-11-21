@@ -1,7 +1,7 @@
-turnkey-moodle4-18.1 (1) turnkey; urgency=low
+turnkey-moodle5-18.1 (1) turnkey; urgency=low
 
-  * Install latest upstream version of Moodle 4.x: 4.5.7+ (as of today,
-    download via git branch MOODLE_405_STABLE).
+  * Install latest upstream version of Moodle 5.x: 5.1+ (as of today,
+    download via git branch MOODLE_501_STABLE).
 
   * Set correct permissions and creating (eventually) missing folders.
 

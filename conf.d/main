@@ -2,7 +2,7 @@
 
 # REFERENCE: https://docs.moodle.org/501/en/Git_for_Administrators
 
-MOODLE_BRANCH="MOODLE_405_STABLE"
+MOODLE_BRANCH="MOODLE_501_STABLE"
 
 # Determine Moodle version from branch
 if [[ "$MOODLE_BRANCH" == *"MOODLE_4"* ]]; then
@@ -10,7 +10,7 @@ if [[ "$MOODLE_BRANCH" == *"MOODLE_4"* ]]; then
 elif [[ "$MOODLE_BRANCH" == *"MOODLE_5"* ]]; then
     MOODLE_VERSION="5"
 else
-    MOODLE_VERSION="4"
+    MOODLE_VERSION="5"
 fi
 
 WEBROOT=/var/www/moodle

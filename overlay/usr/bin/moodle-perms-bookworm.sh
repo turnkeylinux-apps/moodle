@@ -10,7 +10,7 @@ SCRIPT_AUTHOR="Daniele Lolli (UncleDan)"
 SCRIPT_LICENSE="GPL-3.0"
 
 # Default Moodle version (independent from script release)
-DEFAULT_MOODLE_VERSION="4"
+DEFAULT_MOODLE_VERSION="5"
 
 set -e  # Exit immediately on error
 
