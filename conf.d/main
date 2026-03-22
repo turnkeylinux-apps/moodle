@@ -31,8 +31,8 @@ a2enmod rewrite
 a2enmod headers
 
 # tweak php.ini as recommended by moodle
-sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/8.2/apache2/php.ini
-sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/8.2/cli/php.ini
+sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/8.4/apache2/php.ini
+sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/8.4/cli/php.ini
 
 cd $(dirname $MOOSHROOT)
 git clone https://github.com/tmuras/moosh.git
@@ -48,9 +48,9 @@ ln -s $MOOSHROOT/moosh.php /usr/local/bin/moosh
 
 # download latest moodle with moosh, then unpack
 cd $(dirname $WEBROOT)
-moosh download-moodle
-tar -C $(dirname $WEBROOT) -zxf moodle-*.tgz
-rm -f moodle-*.tgz
+# clone latest stable moodle from git
+MOODLE_BRANCH=$(git ls-remote --heads https://github.com/moodle/moodle.git 'MOODLE_*_STABLE' | awk '{print $2}' | sed 's|refs/heads/||' | sort -t_ -k2 -n -k3 -n | tail -1)
+git clone --depth 1 --branch $MOODLE_BRANCH https://github.com/moodle/moodle.git
 chown -R root:root $WEBROOT
 
 cd $WEBROOT
@@ -75,7 +75,7 @@ php admin/cli/install.php \
     --agree-license
 
 chown -R www-data:www-data $DATAROOT
-chown -R www-data:www-data /var/www/moodle/theme
+chown -R www-data:www-data /var/www/moodle/public/theme
 chown root:www-data $WEBROOT/config.php
 
 ## tweak config
