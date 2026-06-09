@@ -7,14 +7,24 @@
 
 MOODLE_BRANCH="MOODLE_501_STABLE"
 
-# Determine Moodle version from branch
-if [[ "$MOODLE_BRANCH" == *"MOODLE_4"* ]]; then
-    MOODLE_VERSION="4"
-elif [[ "$MOODLE_BRANCH" == *"MOODLE_5"* ]]; then
-    MOODLE_VERSION="5"
-else
-    MOODLE_VERSION="4"
-fi
+# Determine Moodle version code from branch (must match set-moodle-perms: 405|500|501|502)
+case "$MOODLE_BRANCH" in
+    MOODLE_405_STABLE) MOODLE_VERSION="405" ;;
+    MOODLE_500_STABLE) MOODLE_VERSION="500" ;;
+    MOODLE_501_STABLE) MOODLE_VERSION="501" ;;
+    MOODLE_502_STABLE) MOODLE_VERSION="502" ;;
+    *)
+        echo "ERROR: Unrecognized MOODLE_BRANCH: '$MOODLE_BRANCH'"
+        echo "       Supported: MOODLE_405_STABLE | MOODLE_500_STABLE | MOODLE_501_STABLE | MOODLE_502_STABLE"
+        exit 1
+        ;;
+esac
+
+# Major version (4 or 5) used for Apache DocumentRoot logic below
+case "$MOODLE_VERSION" in
+    405) MOODLE_MAJOR="4" ;;
+    *)   MOODLE_MAJOR="5" ;;
+esac
 
 WEBROOT=/var/www/moodle
 DATAROOT=/var/moodledata
@@ -84,8 +94,14 @@ cd /usr/local/src
 git clone https://github.com/UncleDan/moodle-scripts.git
 ln -s /usr/local/src/moodle-scripts/set-moodle-perms  /usr/local/bin/set-moodle-perms
 
-# set permissions using UncleDan script just in case...
-set-moodle-perms --moodleversion $MOODLE_VERSION --fix
+# set permissions using UncleDan script
+set-moodle-perms --moodleversion "$MOODLE_VERSION" --moodlepath "$WEBROOT" --moodledata "$DATAROOT" --fix
+PERMS_EXIT=$?
+if [ $PERMS_EXIT -ne 0 ]; then
+    echo "ERROR: set-moodle-perms failed (exit code $PERMS_EXIT)."
+    echo "       2=not root  3=dir not found  4=unknown version  5=chmod  6=chown  7=mkdir"
+    exit $PERMS_EXIT
+fi
 
 ## tweak config
 
@@ -96,14 +112,14 @@ sed -i "s|\$CFG->wwwroot \(.*\)|\$protocol='http://';\n\$hostname='127.0.0.1';\n
 sed -i "/'admin';$/ a \$CFG->preventexecpath = true;" $WEBROOT/config.php
 
 # change document root to /var/www/moodle/public if running Moodle 5.0 (makes this modular)
-if [ "$MOODLE_VERSION" = "5" ]; then
+if [ "$MOODLE_MAJOR" = "5" ]; then
     echo "Moodle 5 detected. Updating DocumentRoot..."
     sed -i 's|/var/www/moodle/|/var/www/moodle/public/|g' "/etc/apache2/sites-available/moodle.conf"
     
     echo "Update complete. Checking syntax..."
     apachectl configtest
 else
-    echo "Moodle version is $MOODLE_VERSION. No path changes required."
+    echo "Moodle version is $MOODLE_MAJOR. No path changes required."
 fi
 
 # set paths to utils

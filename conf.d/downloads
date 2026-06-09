@@ -5,23 +5,4 @@ dl() {
     cd $2; curl -L -f $PROXY $1 > $3; cd -
 }
 
-# Example URLs
-# Latest 3.4: https://download.moodle.org/download.php/direct/stable34/moodle-latest-34.tgz
-# 3.4.1:      https://download.moodle.org/download.php/direct/stable34/moodle-3.4.1.tgz
-# 3.4.0:      https://download.moodle.org/download.php/direct/stable34/moodle-3.4.tgz
-# Latest 3.3: https://download.moodle.org/download.php/direct/stable33/moodle-latest-33.tgz
-
-# Use of gh_releases below should be ok, but 'moosh download-moodle' is
-# working fine, so we'll use that for now (in conf.d/main).
-
-#VERS=$(gh_releases moodle/moodle \
-#       | grep -vi 'alpha\|beta\|rc' \
-#       | tail -1 \
-#       | sed -En "s|v([0-9]?)\.([0-9]?)\.([0-9]?)|\1\2\3|p")
-#
-## v4.0.0
-#VER=400
-#
-#URL="https://download.moodle.org/download.php/direct/stable${VER_1}/moodle-${VER_2}.tgz"
-#
-#dl $URL /usr/local/src moodle.tgz
+# Using git now: https://docs.moodle.org/501/en/Git_for_Administrators
