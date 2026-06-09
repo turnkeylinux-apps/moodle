@@ -1,4 +1,4 @@
-Moodle 5.x - Course Management System
+Moodle 5.1 - Course Management System
 =================================
 
 `Moodle`_ is a popular e-learning software platform, also known as a

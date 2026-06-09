@@ -2,8 +2,24 @@
 
 # REFERENCE: https://docs.moodle.org/501/en/Git_for_Administrators
 
-# As of today 18/02/2026, use "MOODLE_405_STABLE" branch as the latest stable release of Moodle is 4.5.2
-# or "MOODLE_501_STABLE" as the latest stable release of Moodle is 5.0.4.
+# Accepted branches as of today: MOODLE_405_STABLE | MOODLE_500_STABLE | MOODLE_501_STABLE | MOODLE_502_STABLE
+
+MOODLE_BRANCH="MOODLE_501_STABLE"
+WEBROOT=/var/www/moodle
+DATAROOT=/var/moodledata
+
+# Major version (4 or 5) — used only for Apache DocumentRoot logic below
+case "$MOODLE_BRANCH" in
+    MOODLE_405_STABLE) MOODLE_MAJOR="4" ;;
+    MOODLE_500_STABLE|MOODLE_501_STABLE|MOODLE_502_STABLE) MOODLE_MAJOR="5" ;;
+    *)
+        echo "ERROR: Unrecognized MOODLE_BRANCH: '$MOODLE_BRANCH'"
+        echo "       Supported: MOODLE_405_STABLE | MOODLE_500_STABLE | MOODLE_501_STABLE | MOODLE_502_STABLE"
+        exit 1
+        ;;
+esac
+
+### DELETE STARTS HERE WHEN TRIXIE ARRIVES!!! ##############################################################################################################################
 
 # ============================================================
 # PHP 8.3 UPGRADE — required for MOODLE_502_STABLE
@@ -23,8 +39,10 @@ upgrade_php_83() {
     apt-get update
 
     # Install PHP 8.3 with the same extensions as 8.2
-    PHP83_PACKAGES=$(dpkg -l "php${PHP_VERSION}-*" 2>/dev/null         | awk '/^ii/{print $2}'         | sed "s/php${PHP_VERSION}-/php8.3-/g"         | tr '
-' ' ')
+    PHP83_PACKAGES=$(dpkg -l "php${PHP_VERSION}-*" 2>/dev/null \
+        | awk '/^ii/{print $2}' \
+        | sed "s/php${PHP_VERSION}-/php8.3-/g" \
+        | tr '\n' ' ')
     apt-get install -y php8.3 ${PHP83_PACKAGES}
 
     # Disable 8.2, enable 8.3 for Apache
@@ -40,22 +58,6 @@ upgrade_php_83() {
     echo ">>> PHP upgrade complete. Active version: $(php -r 'echo PHP_VERSION;')"
 }
 
-MOODLE_BRANCH="MOODLE_501_STABLE"
-
-# Major version (4 or 5) — used only for Apache DocumentRoot logic below
-case "$MOODLE_BRANCH" in
-    MOODLE_405_STABLE) MOODLE_MAJOR="4" ;;
-    MOODLE_500_STABLE|MOODLE_501_STABLE|MOODLE_502_STABLE) MOODLE_MAJOR="5" ;;
-    *)
-        echo "ERROR: Unrecognized MOODLE_BRANCH: '$MOODLE_BRANCH'"
-        echo "       Supported: MOODLE_405_STABLE | MOODLE_500_STABLE | MOODLE_501_STABLE | MOODLE_502_STABLE"
-        exit 1
-        ;;
-esac
-
-WEBROOT=/var/www/moodle
-DATAROOT=/var/moodledata
-
 # PHP version in use on this system (Debian Bookworm default: 8.2)
 # NOTE: upgrade_php_83() below will update this to 8.3 when needed.
 PHP_VERSION="8.2"
@@ -65,6 +67,8 @@ PHP_VERSION="8.2"
 if [ "$MOODLE_BRANCH" = "MOODLE_502_STABLE" ]; then
     upgrade_php_83
 fi
+
+### DELETE ENDS HERE WHEN TRIXIE ARRIVES!!! ################################################################################################################################
 
 DB_NAME=moodle
 DB_USER=moodle
