@@ -1,4 +1,4 @@
-turnkey-moodle5-18.1 (1) turnkey; urgency=low
+turnkey-moodle501-18.1 (1) turnkey; urgency=low
 
   * Install latest upstream version of Moodle 5.x: Version 5.1.3+ (Build: 20260217)
    (as of today, 18/02/2026: download via git branch MOODLE_501_STABLE).
