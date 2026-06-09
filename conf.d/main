@@ -2,28 +2,19 @@
 
 # REFERENCE: https://docs.moodle.org/501/en/Git_for_Administrators
 
-# As of today 18/02/2026, use "MOODLE_405_STABLE" branch as the latest stable release of Moodle is 4.5.2
-# or "MOODLE_501_STABLE" as the latest stable release of Moodle is 5.0.4.
+# Use directly branches to refer to moodle versions.
 
 MOODLE_BRANCH="MOODLE_501_STABLE"
 
-# Determine Moodle version code from branch (must match set-moodle-perms: 405|500|501|502)
+# Major version (4 or 5) — used only for Apache DocumentRoot logic below
 case "$MOODLE_BRANCH" in
-    MOODLE_405_STABLE) MOODLE_VERSION="405" ;;
-    MOODLE_500_STABLE) MOODLE_VERSION="500" ;;
-    MOODLE_501_STABLE) MOODLE_VERSION="501" ;;
-    MOODLE_502_STABLE) MOODLE_VERSION="502" ;;
+    MOODLE_405_STABLE) MOODLE_MAJOR="4" ;;
+    MOODLE_500_STABLE|MOODLE_501_STABLE|MOODLE_502_STABLE) MOODLE_MAJOR="5" ;;
     *)
         echo "ERROR: Unrecognized MOODLE_BRANCH: '$MOODLE_BRANCH'"
         echo "       Supported: MOODLE_405_STABLE | MOODLE_500_STABLE | MOODLE_501_STABLE | MOODLE_502_STABLE"
         exit 1
         ;;
-esac
-
-# Major version (4 or 5) used for Apache DocumentRoot logic below
-case "$MOODLE_VERSION" in
-    405) MOODLE_MAJOR="4" ;;
-    *)   MOODLE_MAJOR="5" ;;
 esac
 
 WEBROOT=/var/www/moodle
@@ -94,8 +85,14 @@ cd /usr/local/src
 git clone https://github.com/UncleDan/moodle-scripts.git
 ln -s /usr/local/src/moodle-scripts/set-moodle-perms  /usr/local/bin/set-moodle-perms
 
-# set permissions using UncleDan script
-set-moodle-perms --moodleversion "$MOODLE_VERSION" --moodlepath "$WEBROOT" --moodledata "$DATAROOT" --fix
+# Allinea i default di set-moodle-perms con i valori di questo script
+SMP=/usr/local/src/moodle-scripts/set-moodle-perms
+sed -i "s|^MOODLE_BRANCH=.*|MOODLE_BRANCH=\"${MOODLE_BRANCH}\"|" "$SMP"
+sed -i "s|^MOODLE_DIR=.*|MOODLE_DIR=\"${WEBROOT}\"|"             "$SMP"
+sed -i "s|^MOODLEDATA_DIR=.*|MOODLEDATA_DIR=\"${DATAROOT}\"|"    "$SMP"
+
+# set permissions using UncleDan script (branch e path già allineati dal sed)
+set-moodle-perms --fix
 PERMS_EXIT=$?
 if [ $PERMS_EXIT -ne 0 ]; then
     echo "ERROR: set-moodle-perms failed (exit code $PERMS_EXIT)."
