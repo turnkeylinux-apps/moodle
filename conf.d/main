@@ -2,7 +2,43 @@
 
 # REFERENCE: https://docs.moodle.org/501/en/Git_for_Administrators
 
-# Use directly branches to refer to moodle versions.
+# As of today 18/02/2026, use "MOODLE_405_STABLE" branch as the latest stable release of Moodle is 4.5.2
+# or "MOODLE_501_STABLE" as the latest stable release of Moodle is 5.0.4.
+
+# ============================================================
+# PHP 8.3 UPGRADE — required for MOODLE_502_STABLE
+# Temporary workaround: Debian Bookworm ships PHP 8.2 only.
+# TODO: remove this function AND its call below once Debian Trixie
+#       is available as the TurnKey base (Trixie includes PHP 8.3).
+# ============================================================
+upgrade_php_83() {
+    echo ">>> MOODLE_502_STABLE: upgrading PHP ${PHP_VERSION} → 8.3 via sury.org..."
+
+    # Install prerequisites
+    apt-get install -y ca-certificates apt-transport-https lsb-release curl
+
+    # Add Ondřej Surý's PHP repository
+    curl -sSL https://packages.sury.org/php/apt.gpg         | gpg --dearmor -o /usr/share/keyrings/sury-php.gpg
+    echo "deb [signed-by=/usr/share/keyrings/sury-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main"         > /etc/apt/sources.list.d/sury-php.list
+    apt-get update
+
+    # Install PHP 8.3 with the same extensions as 8.2
+    PHP83_PACKAGES=$(dpkg -l "php${PHP_VERSION}-*" 2>/dev/null         | awk '/^ii/{print $2}'         | sed "s/php${PHP_VERSION}-/php8.3-/g"         | tr '
+' ' ')
+    apt-get install -y php8.3 ${PHP83_PACKAGES}
+
+    # Disable 8.2, enable 8.3 for Apache
+    a2dismod "php${PHP_VERSION}"
+    a2enmod php8.3
+
+    # Remove PHP 8.2
+    apt-get purge -y "php${PHP_VERSION}" "php${PHP_VERSION}-*"
+    apt-get autoremove -y
+
+    # Update PHP_VERSION for the rest of this script
+    PHP_VERSION="8.3"
+    echo ">>> PHP upgrade complete. Active version: $(php -r 'echo PHP_VERSION;')"
+}
 
 MOODLE_BRANCH="MOODLE_501_STABLE"
 
@@ -19,6 +55,16 @@ esac
 
 WEBROOT=/var/www/moodle
 DATAROOT=/var/moodledata
+
+# PHP version in use on this system (Debian Bookworm default: 8.2)
+# NOTE: upgrade_php_83() below will update this to 8.3 when needed.
+PHP_VERSION="8.2"
+
+# Upgrade PHP to 8.3 if building for MOODLE_502_STABLE
+# (Remove this block once Debian Trixie is the TurnKey base)
+if [ "$MOODLE_BRANCH" = "MOODLE_502_STABLE" ]; then
+    upgrade_php_83
+fi
 
 DB_NAME=moodle
 DB_USER=moodle
@@ -47,8 +93,8 @@ a2enmod rewrite
 a2enmod headers
 
 # tweak php.ini as recommended by moodle
-sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/8.2/apache2/php.ini
-sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/8.2/cli/php.ini
+sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/${PHP_VERSION}/apache2/php.ini
+sed -Ei "/max_input_vars/ s|^;?(max_input_vars =).*|\1 5000|" /etc/php/${PHP_VERSION}/cli/php.ini
 
 # download latest moodle with git
 git clone git://git.moodle.org/moodle.git $WEBROOT
