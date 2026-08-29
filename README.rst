@@ -13,7 +13,7 @@ and on top of that:
 
 - Moodle configurations:
    
-   - Installed from upstream source code at /var/www/moodle.
+   - Installed from a pinned upstream commit at /var/www/moodle.
    - SSL logins are forced (security).
    - Includes support for authentication via ldap (convenience).
    - Configured default email address for admin, guest and noreply email
@@ -25,6 +25,11 @@ and on top of that:
      **Security note**: Updates to Moodle may require supervision so they **ARE
      NOT** configured to install automatically. See `Moodle Upgrade docs`_ for
      details on the process.
+
+     Moodle core, themes, plugins and configuration are root-owned; only
+     ``/var/www/moodledata`` is writable by the web service. Use
+     ``tkl-set-moodle-perms --fix`` after a supervised upgrade to restore this
+     boundary.
 
 - SSL support out of the box.
 - `Adminer`_ administration frontend for MySQL (listening on port

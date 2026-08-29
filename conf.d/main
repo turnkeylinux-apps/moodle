@@ -9,6 +9,7 @@ DB_PASS=$(mcookie)
 
 ADMIN_USER="admin"
 ADMIN_PASS=turnkey
+MOODLE_COMMIT=b07dd04b40ece3b2d43b2e6ec1213db2a997df7f
 
 # start mysql
 systemctl start mysql
@@ -27,14 +28,11 @@ a2ensite moodle
 a2enmod rewrite
 a2enmod headers
 
-MOODLE_BRANCH=$(
-    git ls-remote --heads https://github.com/moodle/moodle.git 'MOODLE_*_STABLE' \
-    | awk '{print $2}' \
-    | sed 's|refs/heads/||' \
-    | sort -t_ -k2 -n -k3 -n \
-    | tail -1)
-git clone --depth 1 --branch "$MOODLE_BRANCH" \
-    https://github.com/moodle/moodle.git "$WEBROOT"
+git init "$WEBROOT"
+git -C "$WEBROOT" remote add origin https://github.com/moodle/moodle.git
+git -C "$WEBROOT" fetch --depth 1 origin "$MOODLE_COMMIT"
+git -C "$WEBROOT" checkout --detach "$MOODLE_COMMIT"
+test "$(git -C "$WEBROOT" rev-parse HEAD)" = "$MOODLE_COMMIT"
 
 cd $WEBROOT
 php admin/cli/install.php \
@@ -57,12 +55,16 @@ php admin/cli/install.php \
     --non-interactive \
     --agree-license
 
-chown -R www-data:www-data $WEBROOT/theme
-chown root:www-data $WEBROOT/config.php
-chown -R www-data:www-data $DATAROOT
-# file/dir permissions should be ok, but just in case...
-find $WEBROOT -type d -exec chmod 0755 {} \;
-find $WEBROOT -type f -exec chmod 0644 {} \;
+# Executable Moodle and theme/plugin code is root-owned. Only Moodle's data
+# directory remains writable by the web service.
+chown -R root:root "$WEBROOT"
+find "$WEBROOT" -type d -exec chmod 0755 {} +
+find "$WEBROOT" -type f -exec chmod 0644 {} +
+chown root:www-data "$WEBROOT/config.php"
+chmod 0640 "$WEBROOT/config.php"
+chown -R www-data:www-data "$DATAROOT"
+find "$DATAROOT" -type d -exec chmod 0750 {} +
+find "$DATAROOT" -type f -exec chmod 0640 {} +
 
 ## tweak config
 

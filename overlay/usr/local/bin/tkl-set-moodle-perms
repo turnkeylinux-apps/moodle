@@ -25,9 +25,9 @@ readonly EXIT_CACHE_FAILED=8
 # Edit these to match your environment so the script can
 # be launched with --fix only (no extra arguments needed).
 # --------------------------------------------------------
-MOODLE_BRANCH="MOODLE_501_STABLE"   # Branch completo Moodle
+MOODLE_BRANCH="MOODLE_502_STABLE"   # Branch completo Moodle
 MOODLE_DIR="/var/www/moodle"         # Percorso installazione Moodle
-MOODLEDATA_DIR="/var/moodledata"     # Percorso moodledata
+MOODLEDATA_DIR="/var/www/moodledata" # Percorso moodledata
 
 # Flags
 DRY_RUN=false
@@ -166,8 +166,8 @@ apply_fixes() {
     check_main_directories
 
     # -- 1. Ownership --
-    echo "→ Ownership: ${WWW_USER}:${WWW_GROUP}"
-    run_cmd chown -R "${WWW_USER}:${WWW_GROUP}" "$MOODLE_DIR" || {
+    echo "→ Ownership: root-owned code, web-owned data"
+    run_cmd chown -R root:root "$MOODLE_DIR" || {
         echo "❌ ERRORE: chown fallito su $MOODLE_DIR"
         exit $EXIT_CHOWN_FAILED
     }
@@ -177,8 +177,12 @@ apply_fixes() {
     }
 
     # -- 2. Permessi base --
-    echo "→ Permessi MOODLE_DIR  : u=rwX,g=rX,o=rX"
-    run_cmd chmod -R u=rwX,g=rX,o=rX "$MOODLE_DIR" || {
+    echo "→ Permessi MOODLE_DIR  : root writable, world readable"
+    run_cmd find "$MOODLE_DIR" -type d -exec chmod 0755 {} + || {
+        echo "❌ ERRORE: chmod fallito su $MOODLE_DIR"
+        exit $EXIT_CHMOD_FAILED
+    }
+    run_cmd find "$MOODLE_DIR" -type f -exec chmod 0644 {} + || {
         echo "❌ ERRORE: chmod fallito su $MOODLE_DIR"
         exit $EXIT_CHMOD_FAILED
     }
@@ -192,6 +196,10 @@ apply_fixes() {
     # -- 3. Hardening config.php --
     if [ -f "$MOODLE_DIR/config.php" ]; then
         echo "→ Hardening config.php → 640"
+        run_cmd chown root:"${WWW_GROUP}" "$MOODLE_DIR/config.php" || {
+            echo "❌ ERRORE: chown su config.php fallito"
+            exit $EXIT_CHOWN_FAILED
+        }
         run_cmd chmod 640 "$MOODLE_DIR/config.php" || {
             echo "❌ ERRORE: chmod 640 su config.php fallito"
             exit $EXIT_CHMOD_FAILED

@@ -3,6 +3,8 @@
 
 Option:
     --pass=    unless provided, will ask interactively
+    --pass-stdin
+               read the password from standard input
 
 """
 
@@ -25,7 +27,8 @@ def usage(s=None):
 
 def main():
     try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ['help', 'pass='])
+        opts, args = getopt.gnu_getopt(
+            sys.argv[1:], "h", ['help', 'pass=', 'pass-stdin'])
     except getopt.GetoptError as e:
         usage(e)
 
@@ -35,6 +38,8 @@ def main():
             usage()
         elif opt == '--pass':
             password = val
+        elif opt == '--pass-stdin':
+            password = sys.stdin.readline().rstrip('\r\n')
 
     if not password:
         d = Dialog('TurnKey Linux - First boot configuration')

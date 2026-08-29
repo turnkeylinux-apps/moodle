@@ -4,4 +4,4 @@
 . /etc/default/inithooks
 
 [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
-$INITHOOKS_PATH/bin/moodle.py --pass="$APP_PASS"
+printf '%s\n' "$APP_PASS" | $INITHOOKS_PATH/bin/moodle.py --pass-stdin
