@@ -23,8 +23,10 @@ curl "${curl_args[@]}" -b "$work/cookies" -c "$work/cookies" \
     --data-urlencode username=admin \
     --data-urlencode "password=$password" \
     "$base/login/index.php"
-curl "${curl_args[@]}" -b "$work/cookies" "$base/my/" >"$work/dashboard.html"
-grep -Eqi 'dashboard|course|moodle' "$work/dashboard.html"
+grep -Eq '^HTTP/[^ ]+ 303([[:space:]]|$)' "$work/login.headers"
+! grep -Eqi '^location: .*/login/' "$work/login.headers"
+curl "${curl_args[@]}" -L -b "$work/cookies" "$base/my/" >"$work/dashboard.html"
+grep -Eq 'login/logout\.php\?sesskey=[[:alnum:]]+' "$work/dashboard.html"
 
 runuser -u www-data -- test ! -w /var/www/moodle/public/index.php
 runuser -u www-data -- test ! -w /var/www/moodle/config.php
@@ -38,9 +40,10 @@ runuser -u www-data -- php /var/www/moodle/admin/cli/cron.php --keepalive=0
 release=$(sed -n "s/^\$release *= *'\([^']*\)'.*/\1/p" /var/www/moodle/version.php)
 test -n "$release"
 systemctl restart mariadb.service apache2.service
-curl "${curl_args[@]}" -b "$work/cookies" "$base/my/" \
+curl "${curl_args[@]}" -L -b "$work/cookies" "$base/my/" \
     >"$work/dashboard-after-restart.html"
-grep -Eqi 'dashboard|course|moodle' "$work/dashboard-after-restart.html"
+grep -Eq 'login/logout\.php\?sesskey=[[:alnum:]]+' \
+    "$work/dashboard-after-restart.html"
 ! grep -F -- "$password" /var/log/inithooks.log
 
 cat >"$result" <<EOF
