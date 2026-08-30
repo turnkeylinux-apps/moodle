@@ -36,9 +36,12 @@ runuser -u www-data -- touch /var/www/moodledata/.tkl-v19-write-test
 runuser -u www-data -- rm /var/www/moodledata/.tkl-v19-write-test
 /usr/local/bin/tkl-set-moodle-perms --dry-run >"$work/perms-dry-run.txt"
 grep -Fq 'root-owned code' "$work/perms-dry-run.txt"
-runuser -u www-data -- php /var/www/moodle/admin/cli/cron.php
+runuser -u www-data -- php /var/www/moodle/admin/cli/cron.php --keep-alive=0
 
-release=$(sed -n "s/^\$release *= *'\([^']*\)'.*/\1/p" /var/www/moodle/version.php)
+test "$(git -C /var/www/moodle rev-parse HEAD)" = \
+    b07dd04b40ece3b2d43b2e6ec1213db2a997df7f
+release=$(sed -n "s/^\$release *= *'\([^']*\)'.*/\1/p" \
+    /var/www/moodle/public/version.php)
 test -n "$release"
 systemctl restart mariadb.service apache2.service
 curl "${curl_args[@]}" -L -b "$work/cookies" "$base/my/" \
