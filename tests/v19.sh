@@ -8,7 +8,8 @@ base=https://www.example.com
 curl_args=(-kfsS --resolve www.example.com:443:127.0.0.1)
 mkdir -p "$work"
 
-systemctl --quiet is-active apache2.service mariadb.service
+systemctl --quiet is-active apache2.service
+systemctl --quiet is-active mariadb.service
 grep -q '\[40moodle\] successfully completed' /var/log/inithooks.log
 curl "${curl_args[@]}" -c "$work/cookies" "$base/login/index.php" \
     >"$work/login.html"
@@ -35,7 +36,7 @@ runuser -u www-data -- touch /var/www/moodledata/.tkl-v19-write-test
 runuser -u www-data -- rm /var/www/moodledata/.tkl-v19-write-test
 /usr/local/bin/tkl-set-moodle-perms --dry-run >"$work/perms-dry-run.txt"
 grep -Fq 'root-owned code' "$work/perms-dry-run.txt"
-runuser -u www-data -- php /var/www/moodle/admin/cli/cron.php --keepalive=0
+runuser -u www-data -- php /var/www/moodle/admin/cli/cron.php
 
 release=$(sed -n "s/^\$release *= *'\([^']*\)'.*/\1/p" /var/www/moodle/version.php)
 test -n "$release"
