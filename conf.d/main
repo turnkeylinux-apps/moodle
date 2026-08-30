@@ -89,6 +89,11 @@ UPDATE config SET value = '/usr/bin/pdftoppm' WHERE name = 'pathtopdftoppm';
 UPDATE config SET value = '/usr/bin/python3' WHERE name = 'pathtopython';
 EOF
 
+# Moodle 5.2 does not seed noreplyaddress, so an UPDATE alone is a no-op.
+# Use Moodle's configuration API to create it and invalidate its cache.
+runuser -u www-data -- php admin/cli/cfg.php \
+    --name=noreplyaddress --set=noreply@example.com
+
 # disable user delete - removes hyped up "critical" warning
 # - see https://tracker.moodle.org/browse/MDL-67852 for more info
 mysql <<EOF
