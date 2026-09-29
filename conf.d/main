@@ -105,3 +105,10 @@ EOF
 
 # stop mysql server
 systemctl stop  mysql
+
+# Harden permissions to production level "--harden".
+# In this mode, you cannot install plugins from the Moodle graphical interface,
+# but you have bullet proof permissions.
+# If you want to stay with “--semi-harden” to be able to install plugins
+# from the graphical interface, simply change the line below.
+tkl-set-moodle-perms --harden
