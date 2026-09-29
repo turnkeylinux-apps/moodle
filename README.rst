@@ -27,7 +27,7 @@ and on top of that:
      details on the process.
 
      Moodle core, themes, plugins and configuration are root-owned; only
-     ``/var/www/moodledata`` is writable by the web service. Use
+     ``/var/moodledata`` is writable by the web service. Use
      ``tkl-set-moodle-perms --fix`` after a supervised upgrade to restore this
      boundary.
 
