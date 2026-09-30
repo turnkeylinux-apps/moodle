@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 WEBROOT=/var/www/moodle
-DATAROOT=/var/www/moodledata
+DATAROOT=/var/moodledata
 
 DB_NAME=moodle
 DB_USER=moodle
@@ -9,7 +9,9 @@ DB_PASS=$(mcookie)
 
 ADMIN_USER="admin"
 ADMIN_PASS=turnkey
-MOODLE_COMMIT=b07dd04b40ece3b2d43b2e6ec1213db2a997df7f
+# You will need the commit corresponding to the desired version from https://github.com/moodle/moodle/tags
+# https://github.com/moodle/moodle/releases/tag/v5.2.3 ==> 
+MOODLE_COMMIT=344232c15336c71b80f9aca8359ce0e0a9f3d116
 
 # start mysql
 systemctl start mysql
@@ -103,3 +105,10 @@ EOF
 
 # stop mysql server
 systemctl stop  mysql
+
+# Harden permissions to production level "--harden".
+# In this mode, you cannot install plugins from the Moodle graphical interface,
+# but you have bullet proof permissions.
+# If you want to stay with “--semi-harden” to be able to install plugins
+# from the graphical interface, simply change the line below.
+tkl-set-moodle-perms --harden

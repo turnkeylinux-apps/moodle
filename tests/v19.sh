@@ -32,8 +32,8 @@ grep -Eq 'login/logout\.php\?sesskey=[[:alnum:]]+' "$work/dashboard.html"
 runuser -u www-data -- test ! -w /var/www/moodle/public/index.php
 runuser -u www-data -- test ! -w /var/www/moodle/config.php
 runuser -u www-data -- test ! -w /var/www/moodle/theme
-runuser -u www-data -- touch /var/www/moodledata/.tkl-v19-write-test
-runuser -u www-data -- rm /var/www/moodledata/.tkl-v19-write-test
+runuser -u www-data -- touch /var/moodledata/.tkl-v19-write-test
+runuser -u www-data -- rm /var/moodledata/.tkl-v19-write-test
 /usr/local/bin/tkl-set-moodle-perms --dry-run >"$work/perms-dry-run.txt"
 grep -Fq 'root-owned code' "$work/perms-dry-run.txt"
 test "$(runuser -u www-data -- php /var/www/moodle/admin/cli/cfg.php \
